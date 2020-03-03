@@ -59,7 +59,7 @@ Root
 * `spacer` — Actual spacer; defaults to ` `
 * `verticalLine` — Vertical line; defaults to `|`
 * `intermediateConnector` — Connects a node that is not the leaf to the node above it; defaults to `+`
-* `finalConnector` — Connects a leaf node to the node above it; defaults to ```
+* `finalConnector` — Connects a leaf node to the node above it; defaults to `` ` ``
 * `connectorSuffix` — Suffix after the connector; defaults to `-- `
 
 To customize any part of the tree print, create an instance of `TreePrinter.TreePrinterOptions` and
