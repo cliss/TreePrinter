@@ -5,7 +5,7 @@ A small library to convert a tree structure into a `String`, designed to be used
 # Quick Start
 
 1. Include the framework in your project
-2. Conform your type to be `TreePrintable`
+2. Conform your type to be `TreeRepresentable`
 3. `let treeString = TreePrinter.printTree(root: rootNodeOfYourTree)`
 
 # Example
@@ -22,7 +22,7 @@ struct SomeTreeStructure {
 You start by confirming your type to `TreeRepresentable`:
 
 ```swift
-extension SomeTreeStructure {
+extension SomeTreeStructure: TreeRepresentable {
     var name: String { return self.title }
     var subnodes: [SomeTreeStructure] { return self.childNodes }
 }
@@ -37,7 +37,9 @@ func someFunctionYoureTesting() {
 }
 ```
 
-By default, for the tree that is used for the purposes of unit testing, the result will be:
+By default, for [the tree that is used for the purposes of unit testing][ut], the result will be:
+
+[ut]: https://github.com/cliss/TreePrinter/blob/3b2468eb8988fb41c73b46b2352df106b0428294/Tests/TreePrinterTests/TreeNode.swift#L18-L31
 
 ```
 Root
@@ -77,5 +79,5 @@ TreePrinter.printTree(root: treeRoot, options: treePrinterOptions)
 
 ## Add files
 
-1. Make copies of `Sources/TreePrinter/TreeRepresentable.swift` and `Sources/TreePrinter/TreePrinterTests.swift`
+1. Make copies of [`Sources/TreePrinter/TreeRepresentable.swift`](https://github.com/cliss/TreePrinter/blob/master/Sources/TreePrinter/TreeRepresentable.swift) and [`Sources/TreePrinter/TreePrinter.swift`](https://github.com/cliss/TreePrinter/blob/master/Sources/TreePrinter/TreePrinter.swift)
 2. Add them to your project
