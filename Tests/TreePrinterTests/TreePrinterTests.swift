@@ -349,5 +349,20 @@ class TreePrinterTests: XCTestCase {
             connectorSuffix: "── ")
         print(TreePrinter.printTree(root: TreeNode.sampleTree, options: options))
     }
+    
+    func testOnlyOneFirstLevelNode() {
+        let tree = TreeNode(title: "Root",
+                            subNodes: [
+                                TreeNode(title: "Level One", subNodes: [
+                                    TreeNode(title: "Level Two A", subNodes: []),
+                                    TreeNode(title: "Level Two B", subNodes: [])
+                                ])
+                            ])
+        let result = TreePrinter.printTree(root: tree)
+        print(result)
+        let lines = result.split(separator: "\n")
+        
+        XCTAssertFalse(lines[2].first == "│")
+    }
 
 }

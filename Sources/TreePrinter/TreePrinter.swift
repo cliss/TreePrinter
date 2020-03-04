@@ -115,6 +115,7 @@ public class TreePrinter {
             var newDepthsFinished = depthsFinished
             // If we're the last subnode, mark that depth as finished.
             if index == node.subnodes.count - 1 {
+                newDepthsFinished.insert(depth)
                 newDepthsFinished.insert(depth + 1)
             }
             retVal += printNode(node: subnode,
