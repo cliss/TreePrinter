@@ -29,6 +29,18 @@ extension TreeNode {
         
         return root
     }
+    
+    static var sampleOneItemAtDepthZeroTree: TreeNode {
+        return TreeNode(title: "Zero Depth", subNodes: [
+            TreeNode(title: "Depth One", subNodes: [
+                TreeNode(title: "Depth Two A", subNodes: []),
+                TreeNode(title: "Depth Two B", subNodes: [
+                    TreeNode(title: "Depth Three", subNodes: [])
+                ]),
+                TreeNode(title: "Depth Two C", subNodes: [])
+            ])
+        ])
+    }
 }
 
 extension TreeNode: TreeRepresentable {

@@ -339,6 +339,16 @@ class TreePrinterTests: XCTestCase {
         XCTAssert(lines[6].contains("Branch Depth One B"))
     }
     
+    func testOneItemAtDepthOne() {
+        let options = TreePrinter.TreePrinterOptions()
+        let result = TreePrinter.printTree(root: TreeNode.sampleOneItemAtDepthZeroTree)
+        print(result)
+        let lines = result.split(separator: "\n")
+        let line = lines[4]
+        
+        XCTAssertTrue(line.contains(options.verticalLine))
+    }
+    
     func testAlwaysPassingBootstrapper() {
         let options = TreePrinter.TreePrinterOptions(
             spacesPerDepth: 4,
@@ -363,6 +373,91 @@ class TreePrinterTests: XCTestCase {
         let lines = result.split(separator: "\n")
         
         XCTAssertFalse(lines[2].first == "│")
+    }
+    
+    func testSeveralDepthsWithLeaves() {
+        let options = TreePrinter.TreePrinterOptions()
+        let tree = TreeNode(title: "Root", subNodes: [
+            TreeNode(title: "Depth One A", subNodes: []),
+            TreeNode(title: "Depth One B", subNodes: [
+                TreeNode(title: "Depth Two A", subNodes: []),
+                TreeNode(title: "Depth Two B", subNodes: []),
+                TreeNode(title: "Depth Two C", subNodes: [
+                    TreeNode(title: "Depth Three A", subNodes: [
+                        TreeNode(title: "Depth Four A", subNodes: [])
+                    ])
+                ])
+            ]),
+            TreeNode(title: "Depth One C", subNodes: [
+                TreeNode(title: "Depth Two D", subNodes: [
+                    TreeNode(title: "Depth Three B", subNodes: [
+                        TreeNode(title: "Depth Four B", subNodes: [
+                            TreeNode(title: "Depth Five", subNodes: [])
+                        ])
+                    ]),
+                    TreeNode(title: "Depth Three C", subNodes: [])
+                ]),
+                TreeNode(title: "Depth Two E", subNodes: [])
+            ]),
+            TreeNode(title: "Depth One D", subNodes: [])
+        ])
+        let result = TreePrinter.printTree(root: tree, options: options)
+        print(result)
+        
+        let lines = result.split(separator: "\n").map { String($0) }
+        
+        XCTAssertEqual(16, lines.count)
+        // Root
+        XCTAssertEqual(lines[0], tree.name)
+        // Depth One A, Depth One B
+        XCTAssertTrue(lines[1].starts(with: options.intermediateConnector))
+        XCTAssertTrue(lines[2].starts(with: options.intermediateConnector))
+        // Depth Two A
+        XCTAssertTrue(lines[3].starts(with: options.verticalLine))
+        XCTAssertTrue(lines[3].contains(options.intermediateConnector))
+        // Depth Two B
+        XCTAssertTrue(lines[4].starts(with: options.verticalLine))
+        XCTAssertTrue(lines[4].contains(options.intermediateConnector))
+        // Depth Two C
+        XCTAssertTrue(lines[5].starts(with: options.verticalLine))
+        XCTAssertTrue(lines[5].contains(options.finalConnector))
+        // Depth Three A
+        XCTAssertEqual(1, getMatchCount(options.verticalLine, in: lines[6]))
+        XCTAssertTrue(lines[6].contains(options.finalConnector))
+        // Depth Four A
+        XCTAssertEqual(1, getMatchCount(options.verticalLine, in: lines[7]))
+        XCTAssertTrue(lines[7].contains(options.finalConnector))
+        // Depth One C
+        XCTAssertTrue(lines[8].starts(with: options.intermediateConnector))
+        // Depth Two D
+        XCTAssertEqual(1, getMatchCount(options.verticalLine, in: lines[9]))
+        XCTAssertTrue(lines[9].contains(options.intermediateConnector))
+        // Depth Three B
+        XCTAssertEqual(2, getMatchCount(options.verticalLine, in: lines[10]))
+        XCTAssertTrue(lines[10].contains(options.intermediateConnector))
+        // Depth Four B
+        XCTAssertEqual(3, getMatchCount(options.verticalLine, in: lines[11]))
+        XCTAssertTrue(lines[11].contains(options.finalConnector))
+        // Depth Five
+        XCTAssertEqual(3, getMatchCount(options.verticalLine, in: lines[12]))
+        XCTAssertTrue(lines[12].contains(options.finalConnector))
+        // Depth Three C
+        XCTAssertEqual(2, getMatchCount(options.verticalLine, in: lines[13]))
+        XCTAssertTrue(lines[13].contains(options.finalConnector))
+        // Depth Two E
+        XCTAssertEqual(1, getMatchCount(options.verticalLine, in: lines[14]))
+        XCTAssertTrue(lines[14].contains(options.finalConnector))
+        // Depth One D
+        XCTAssertTrue(lines[15].starts(with: options.finalConnector))
+    }
+    
+    private func getMatchCount(_ pattern: String, in haystack: String) -> Int {
+        let regex = try! NSRegularExpression(pattern: pattern,
+                                             options: .ignoreMetacharacters)
+        
+        return regex.numberOfMatches(in: haystack,
+                                     options: .withTransparentBounds,
+                                     range: NSRange(haystack.startIndex..., in: haystack))
     }
 
 }

@@ -96,7 +96,7 @@ public class TreePrinter {
         
         // Now the correct connector: either an intermediate or a final
         if depth > 0 {
-            if depthsFinished.contains(depth) {
+            if depthsFinished.contains(depth - 1) {
                 retVal += options.finalConnector
             } else {
                 retVal += options.intermediateConnector
@@ -116,7 +116,9 @@ public class TreePrinter {
             // If we're the last subnode, mark that depth as finished.
             if index == node.subnodes.count - 1 {
                 newDepthsFinished.insert(depth)
-                newDepthsFinished.insert(depth + 1)
+                if depth != 0 {
+                    newDepthsFinished.insert(depth + 1)
+                }
             }
             retVal += printNode(node: subnode,
                                 depth: depth + 1,
