@@ -55,12 +55,12 @@ Root
 
 `TreePrinter` will use a sensible set of default options, however, many things are customizable:
 
-* `spacesPerDepth` — Amount of indentation; defaults to `5`.
+* `spacesPerDepth` — Amount of indentation; defaults to `4`.
 * `spacer` — Actual spacer; defaults to ` `
-* `verticalLine` — Vertical line; defaults to `|`
-* `intermediateConnector` — Connects a node that is not the leaf to the node above it; defaults to `+`
-* `finalConnector` — Connects a leaf node to the node above it; defaults to `` ` ``
-* `connectorSuffix` — Suffix after the connector; defaults to `-- `
+* `verticalLine` — Vertical line; defaults to `│`
+* `intermediateConnector` — Connects a node that is not the leaf to the node above it; defaults to `├`
+* `finalConnector` — Connects a leaf node to the node above it; defaults to `└`
+* `connectorSuffix` — Suffix after the connector; defaults to `── `
 
 To customize any part of the tree print, create an instance of `TreePrinter.TreePrinterOptions` and
 pass alternates for any of the above. The rest, if not provided, will use the default values. Then print the tree
