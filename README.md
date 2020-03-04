@@ -43,12 +43,12 @@ By default, for [the tree that is used for the purposes of unit testing][ut], th
 
 ```
 Root
-+-- Branch Depth One A
-|    +-- Branch Depth Two A
-|    +-- Branch Depth Two B
-|    |    `-- Leaf Depth Three
-|    `-- Branch Depth Two C
-`-- Branch Depth One B
+├── Branch Depth One A
+│   ├── Branch Depth Two A
+│   ├── Branch Depth Two B
+│   │   └── Leaf Depth Three
+│   └── Branch Depth Two C
+└── Branch Depth One B
 ```
 
 # Options
