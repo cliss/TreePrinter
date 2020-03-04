@@ -23,21 +23,21 @@ public class TreePrinter {
         /// - Note: Every parameter has a sensible default.
         ///
         /// - Parameters:
-        ///   - spacesPerDepth: Indentation per depth level; defaults to `5`
+        ///   - spacesPerDepth: Indentation per depth level; defaults to `4`
         ///   - spacer: The spacer to use for indentation; defaults to a single space
-        ///   - verticalLine: The `String` to use for a vertical line; defaults to `|`
+        ///   - verticalLine: The `String` to use for a vertical line; defaults to `│`
         ///   - intermediateConnector: The `String` to use to connect a non-terminal
-        ///                            node to its parent; defualts to `+`
+        ///                            node to its parent; defualts to `├`
         ///   - finalConnector: The `String` to use to connect a terminal node to its parent;
-        ///                     defaults to `
+        ///                     defaults to `` ` ``
         ///   - connectorSuffix: The `String` suffix after one of the connectors;
-        ///                      defaults to two hyphens with a trailing space.
-        public init(spacesPerDepth: Int = 5,
+        ///                      defaults to `── `
+        public init(spacesPerDepth: Int = 4,
                     spacer: String = " ",
-                    verticalLine: String = "|",
-                    intermediateConnector: String = "+",
-                    finalConnector: String = "`",
-                    connectorSuffix: String = "-- ")
+                    verticalLine: String = "│",
+                    intermediateConnector: String = "├",
+                    finalConnector: String = "└",
+                    connectorSuffix: String = "── ")
         {
             self.spacesPerDepth = spacesPerDepth
             self.spacer = spacer
@@ -45,6 +45,17 @@ public class TreePrinter {
             self.intermediateConnector = intermediateConnector
             self.finalConnector = finalConnector
             self.connectorSuffix = connectorSuffix
+        }
+        
+        /// Alternative defaults that uses characters that are easily
+        /// typed on a standard US keyboard.
+        public static var alternateDefaults: TreePrinterOptions {
+            TreePrinterOptions(spacesPerDepth: 5,
+                               spacer: " ",
+                               verticalLine: "|",
+                               intermediateConnector: "+",
+                               finalConnector: "`",
+                               connectorSuffix: "-- ")
         }
     }
     
@@ -57,7 +68,7 @@ public class TreePrinter {
     {
         return printNode(node: root,
                          depth: 0,
-                         depthsFinished: Set([0]),
+                         depthsFinished: Set(),
                          options: options)
     }
     
@@ -73,8 +84,8 @@ public class TreePrinter {
                                         options: TreePrinterOptions) -> String where Node: TreeRepresentable
     {
         var retVal = ""
-        // Prefix the appropriate spaces/pipes
-        for i in 0..<depth * options.spacesPerDepth {
+        // Prefix the appropriate spaces/pipes.
+        for i in 0..<max(depth - 1, 0) * options.spacesPerDepth {
             if i % options.spacesPerDepth == 0 && !depthsFinished.contains(i / options.spacesPerDepth)
             {
                 retVal += options.verticalLine
