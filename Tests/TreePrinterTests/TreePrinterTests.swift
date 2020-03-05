@@ -451,6 +451,55 @@ class TreePrinterTests: XCTestCase {
         XCTAssertTrue(lines[15].starts(with: options.finalConnector))
     }
     
+    func testWasMissingVerticalLine() {
+        // Before bug fixes, the tree below was missing the
+        // vertical line connecting "Depth Two B" and "Depth Two C".
+        // (This is the line on the "Depth Three" row)
+        // This test exercises Github issue #3.
+        let tree = TreeNode(title: "Root", subNodes: [
+            TreeNode(title: "Zero Depth", subNodes: [
+                TreeNode(title: "Depth One", subNodes: [
+                    TreeNode(title: "Depth Two A", subNodes: []),
+                    TreeNode(title: "Depth Two B", subNodes: [
+                        TreeNode(title: "Depth Three", subNodes: [])
+                    ]),
+                    TreeNode(title: "Depth Two C", subNodes: [])
+                ])
+            ]),
+            TreeNode(title: "Zero Depth Again", subNodes: [])
+        ])
+        
+        let options = TreePrinter.TreePrinterOptions()
+        let result = TreePrinter.printTree(root: tree, options: options)
+        let lines = result.split(separator: "\n").map { String($0) }
+        
+        print(result)
+        
+        XCTAssertEqual(8, lines.count)
+        // Root
+        XCTAssertEqual("Root", lines[0])
+        // Zero Depth
+        XCTAssertTrue(lines[1].starts(with: options.intermediateConnector))
+        // Depth One
+        XCTAssertEqual(1, getMatchCount(options.verticalLine, in: lines[2]))
+        XCTAssertEqual(1, getMatchCount(options.finalConnector, in: lines[2]))
+        // Depth Two A
+        XCTAssertEqual(1, getMatchCount(options.verticalLine, in: lines[3]))
+        XCTAssertEqual(1, getMatchCount(options.intermediateConnector, in: lines[3]))
+        // Depth Two B
+        XCTAssertEqual(1, getMatchCount(options.verticalLine, in: lines[4]))
+        XCTAssertEqual(1, getMatchCount(options.intermediateConnector, in: lines[4]))
+        // Depth Three
+        XCTAssertEqual(2, getMatchCount(options.verticalLine, in: lines[5]))
+        XCTAssertEqual(1, getMatchCount(options.finalConnector, in: lines[5]))
+        // Depth Two C
+        XCTAssertEqual(1, getMatchCount(options.verticalLine, in: lines[6]))
+        XCTAssertEqual(1, getMatchCount(options.finalConnector, in: lines[6]))
+        // Zero Depth Again
+        XCTAssertEqual(1, getMatchCount(options.finalConnector, in: lines[7]))
+        XCTAssert(lines[7].starts(with: options.finalConnector))
+    }
+    
     private func getMatchCount(_ pattern: String, in haystack: String) -> Int {
         let regex = try! NSRegularExpression(pattern: pattern,
                                              options: .ignoreMetacharacters)

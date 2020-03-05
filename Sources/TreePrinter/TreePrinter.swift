@@ -86,7 +86,7 @@ public class TreePrinter {
         var retVal = ""
         // Prefix the appropriate spaces/pipes.
         for i in 0..<max(depth - 1, 0) * options.spacesPerDepth {
-            if i % options.spacesPerDepth == 0 && !depthsFinished.contains(i / options.spacesPerDepth)
+            if i % options.spacesPerDepth == 0 && !depthsFinished.contains(i / options.spacesPerDepth + 1)
             {
                 retVal += options.verticalLine
             } else {
@@ -96,7 +96,7 @@ public class TreePrinter {
         
         // Now the correct connector: either an intermediate or a final
         if depth > 0 {
-            if depthsFinished.contains(depth - 1) {
+            if depthsFinished.contains(depth) {
                 retVal += options.finalConnector
             } else {
                 retVal += options.intermediateConnector
@@ -113,12 +113,13 @@ public class TreePrinter {
         // Sub-tree
         for (index, subnode) in node.subnodes.enumerated() {
             var newDepthsFinished = depthsFinished
+            // There can only be one root node, so if it isn't marked, mark it.
+            if depth == 0 {
+                newDepthsFinished.insert(depth)
+            }
             // If we're the last subnode, mark that depth as finished.
             if index == node.subnodes.count - 1 {
-                newDepthsFinished.insert(depth)
-                if depth != 0 {
-                    newDepthsFinished.insert(depth + 1)
-                }
+                newDepthsFinished.insert(depth + 1)
             }
             retVal += printNode(node: subnode,
                                 depth: depth + 1,
@@ -129,3 +130,4 @@ public class TreePrinter {
         return retVal
     }
 }
+
